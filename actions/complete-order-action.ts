@@ -1,5 +1,31 @@
 "use server"
-export async function completeOrder() {
+import { revalidatePath } from 'next/cache'
+import { prisma } from "@/src/lib/prisma"
+import { OrderIdSchema } from "@/src/schema"
 
-    console.log('desde completeOrder')
+export async function completeOrder(formData: FormData) {
+
+    const data = {
+        orderId: formData.get('order_id')
+    }
+    const result = OrderIdSchema.safeParse(data)
+    if (result.success) {
+
+        try {
+            await prisma.order.update({
+                where: {
+                    id: result.data.orderId
+                },
+                data: {
+                    status: true,
+                    orderReady: new Date(Date.now())
+                }
+            })
+            revalidatePath('/admin/orders')
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
 }
