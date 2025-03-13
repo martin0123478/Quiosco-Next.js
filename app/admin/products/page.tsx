@@ -6,10 +6,6 @@ import { prisma } from "@/src/lib/prisma";
 import Link from "next/link";
 import { redirect, RedirectType } from "next/navigation";
 
-
-async function productCount() {
-    return await prisma.product.count()
-}
 async function getProducts(page: number, pageSize: number) {
     const skip = (page - 1) * 10
     const products = await prisma.product.findMany({
@@ -23,7 +19,15 @@ async function getProducts(page: number, pageSize: number) {
 
 }
 export type ProductsWithCategory = Awaited<ReturnType<typeof getProducts>>
+async function productCount() {
+    return await prisma.product.count()
+}
+
+
+
 export default async function ProductsPage({ searchParams }: { searchParams: { page: string } }) {
+
+
 
     const page = +searchParams.page || 1
     const pageSize = 10
