@@ -1,16 +1,18 @@
 import { Product } from "@prisma/client"
 import Image from "next/image"
 import AddProductButton from "./AddProductButton"
+import { getImagePath } from "@/src/utils"
 
 type ProductCardProps = {
     product: Product
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {
+    const imagePath = getImagePath(product.image)
     return (
         <div className="border bg-white">
             <Image
-                src={`/products/${product.image}.jpg`}
+                src={imagePath}
                 alt={`${product.name}`}
                 width={400} height={500}
             />
